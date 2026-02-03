@@ -4,7 +4,7 @@ import os
 import rcon
 
 from app.helpers import check_http, check_tcp
-from app.config import SERVICES
+from app.config import SERVICES, RCON_PASSWORD
 
 router = APIRouter()
 
@@ -35,7 +35,7 @@ async def fingcraft_status():
 
     response = []
 
-    with rcon.Client("fingcraft", 25575, passwd=os.getenv("RCON_PASSWORD")) as client:
+    with rcon.Client("fingcraft", 25575, passwd=RCON_PASSWORD) as client:
         response.append({"current_players": await asyncio.to_thread(client.run, "list")})
         response.append({"time": await asyncio.to_thread(client.run, "time")})
         response.append({"stats": await asyncio.to_thread(client.run, "memory")})
