@@ -13,7 +13,7 @@ COPY pyproject.toml .
 
 # Instalamos dependencias
 RUN pip install --no-cache-dir uv \
-    && uv sync --frozen
+    && uv sync
 
 # Copiamos toda la app
 COPY . .
