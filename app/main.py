@@ -76,7 +76,7 @@ async def fingcraft_status():
 
     response = []
     
-    with rcon.Client("127.0.0.1", 25575, passwd=os.getenv("RCON_PASSWORD")) as client:
+    with rcon.Client("fingcraft", 25575, passwd=os.getenv("RCON_PASSWORD")) as client:
         response.append({"current_players" : await asyncio.to_thread(client.run("list"))})
         response.append({"time" : await asyncio.to_thread(client.run("time"))})
         response.append({"stats" : await asyncio.to_thread(client.run("memory"))})
