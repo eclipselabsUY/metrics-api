@@ -1,7 +1,7 @@
 import time
 from fastapi import Request
 
-from app.logging import logger
+from app.core.logging import logger
 
 async def logging_middleware(request: Request, call_next):
     start = time.time()
