@@ -4,6 +4,7 @@
     ".venv/lib/python3.12/site-packages"
   ],
   "vsicons.associations.folders": [
-    { "icon": "config", "extensions": ["core"], "format": "svg" }
+    { "icon": "config", "extensions": ["core"], "format": "svg" },
+    { "icon": "route", "extensions": ["status"], "format": "svg" }
   ]
 }
