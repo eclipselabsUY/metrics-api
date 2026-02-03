@@ -1,0 +1,1 @@
+from app.status.routes import router as status_router
