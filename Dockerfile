@@ -1,0 +1,24 @@
+# Usamos Python 3.12 slim para tener algo liviano
+FROM python:3.12-slim
+
+# Evitamos buffers de stdout/stderr
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONFAULTHANDLER=1
+
+# Carpeta de la app dentro del contenedor
+WORKDIR /app
+
+# Copiamos archivos de requirements primero para caching
+COPY pyproject.toml .
+
+# Instalamos dependencias
+RUN uv sync --frozen
+
+# Copiamos toda la app
+COPY . .
+
+# Exponemos puerto de la API
+EXPOSE 8000
+
+# Comando para correr FastAPI con uvicorn
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
