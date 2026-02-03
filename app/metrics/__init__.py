@@ -1,0 +1,1 @@
+from app.metrics.routes import router as metrics_router
