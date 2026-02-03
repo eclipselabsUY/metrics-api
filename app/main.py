@@ -4,6 +4,7 @@ from httpx import RequestError, AsyncClient
 import asyncio
 import rcon
 import os
+from dotenv import load_dotenv
 
 app = FastAPI()
 
@@ -12,6 +13,10 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+# ENV VAR
+
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
 
 # Variables
 
