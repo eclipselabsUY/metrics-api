@@ -1,0 +1,12 @@
+[project]
+name = "egos-api"
+version = "0.1.0"
+description = "EGO Services Main API"
+readme = "README.md"
+requires-python = ">=3.12.7"
+dependencies = [
+    "fastapi>=0.128.0",
+    "httpx>=0.28.1",
+    "rcon>=2.4.9",
+    "uvicorn>=0.40.0",
+]
