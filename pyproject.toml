@@ -10,6 +10,7 @@ dependencies = [
     "dotenv>=0.9.9",
     "fastapi>=0.128.0",
     "httpx>=0.28.1",
+    "psycopg2>=2.9.11",
     "rcon>=2.4.9",
     "sqlalchemy>=2.0.46",
     "uvicorn>=0.40.0",
