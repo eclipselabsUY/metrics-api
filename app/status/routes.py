@@ -2,7 +2,7 @@ from fastapi import APIRouter
 import asyncio
 import rcon
 
-from app.status.helpers import check_http, check_tcp
+from app.status.services import check_http, check_tcp
 from app.core.config import SERVICES, RCON_PASSWORD
 
 router = APIRouter()
