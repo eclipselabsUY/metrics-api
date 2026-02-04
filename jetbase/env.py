@@ -1,10 +1,30 @@
 # Jetbase Configuration
 # Update the sqlalchemy_url with your database connection string.
 
-from app.core.config import JETBASE_SQLALCHEMY_URL, ASYNC
+from dotenv import load_dotenv
+import os
 
-sqlalchemy_url = JETBASE_SQLALCHEMY_URL
-async_mode = ASYNC
+# Load Env Vars
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+dotenv_path = os.path.join(PROJECT_ROOT, ".env")
+load_dotenv(dotenv_path)
 
-print(sqlalchemy_url)
-print(f"Async: {async_mode}")
+POSTGRES_USER = os.getenv("POSTGRES_USER")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
+POSTGRES_DB = os.getenv("POSTGRES_DB")
+ENVIRONMENT = os.getenv("ENVIRONMENT")
+
+if ENVIRONMENT == "DEV":
+    def get_env_vars():
+        return {
+            "sqlalchemy_url": "sqlite+aiosqlite:///./egos.db",
+            "async_mode": True,
+        }
+else:
+    def get_env_vars():
+        return {
+            "sqlalchemy_url": "postgresql+asyncpg://user:password@localhost:5432/mydb",
+            "async_mode": True,
+        }
