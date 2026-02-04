@@ -2,7 +2,11 @@ from dotenv import load_dotenv
 import os
 
 # Load Env Vars
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+dotenv_path = os.path.join(PROJECT_ROOT, ".env")
+load_dotenv(dotenv_path)
+
+print("Loading .env from:", dotenv_path)
 
 # Current EGO Services
 SERVICES = [
@@ -33,3 +37,21 @@ else:
         f"@{POSTGRES_HOST}:{POSTGRES_PORT}"
         f"/{POSTGRES_DB}"
     )
+
+JETBASE_SQLALCHEMY_URL = DATABASE_URL
+ASYNC = True
+
+# Debug block
+if __name__ == "__main__":
+    print("=== Debug Config ===")
+    print("ENVIRONMENT:", repr(ENVIRONMENT))
+    print("API_KEY:", repr(API_KEY))
+    print("RCON_PASSWORD:", repr(RCON_PASSWORD))
+    print("POSTGRES_USER:", repr(POSTGRES_USER))
+    print("POSTGRES_PASSWORD:", repr(POSTGRES_PASSWORD))
+    print("POSTGRES_HOST:", repr(POSTGRES_HOST))
+    print("POSTGRES_PORT:", repr(POSTGRES_PORT))
+    print("POSTGRES_DB:", repr(POSTGRES_DB))
+    print("DATABASE_URL:", repr(DATABASE_URL))
+    print("SERVICES:", SERVICES)
+    print("===================")
