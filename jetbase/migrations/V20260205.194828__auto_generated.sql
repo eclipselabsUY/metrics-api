@@ -11,7 +11,8 @@ CREATE TABLE events (
     event_type_id INTEGER NOT NULL,
     timestamp DATETIME,
     client_ip VARCHAR(45),
-    event_metadata JSON
+    event_metadata JSON,
+    FOREIGN KEY (event_type_id) REFERENCES event_types (id)
 );
 
 -- rollback
