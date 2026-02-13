@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 from app.core.enums import ServiceKind
+from app.models.api_key import ApiKey
 
 class ServiceType(Base):
     __tablename__ = "service_types"
