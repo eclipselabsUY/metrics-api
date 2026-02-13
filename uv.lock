@@ -114,8 +114,8 @@ wheels = [
 
 [[package]]
 name = "dbwarden"
-version = "1.0.0"
-source = { editable = "../dbwarden" }
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiosqlite" },
     { name = "asyncpg" },
@@ -126,26 +126,10 @@ dependencies = [
     { name = "sqlalchemy" },
     { name = "typer" },
 ]
-
-[package.metadata]
-requires-dist = [
-    { name = "aiosqlite", specifier = ">=0.22.1" },
-    { name = "aiosqlite", marker = "extra == 'sqlite-async'", specifier = ">=0.22.1" },
-    { name = "asyncpg", specifier = ">=0.29.0,<0.32.0" },
-    { name = "asyncpg", marker = "extra == 'postgres-async'", specifier = ">=0.29.0,<0.32.0" },
-    { name = "packaging", specifier = ">=25.0" },
-    { name = "psycopg2-binary", marker = "extra == 'dev'", specifier = ">=2.9.11" },
-    { name = "psycopg2-binary", marker = "extra == 'postgres-sync'", specifier = ">=2.9.11" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.2" },
-    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.24.0" },
-    { name = "python-dotenv", specifier = ">=1.0.0" },
-    { name = "pyyaml", specifier = ">=6.0" },
-    { name = "rich", specifier = ">=12.2.0" },
-    { name = "sqlalchemy", specifier = ">=2.0.10" },
-    { name = "sqlalchemy", extras = ["postgresql"], marker = "extra == 'postgres-async'", specifier = ">=2.0.10" },
-    { name = "typer", specifier = ">=0.12.3" },
+sdist = { url = "https://files.pythonhosted.org/packages/62/1b/d5aa1995f5f0aea440075ba8bc0cac8f1862fb7761d3eebdf0821ca4afe5/dbwarden-0.1.2.tar.gz", hash = "sha256:2176f2adfb51165b6f477dcdcb9ff0e06bd23280f7f14918d48cb1af3dd6bf06", size = 66474, upload-time = "2026-02-12T13:34:31.934Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/87/0b/80c8509e78552a58cfc8816d06dbff4e17283287791a094e2a0b8a545263/dbwarden-0.1.2-py3-none-any.whl", hash = "sha256:8e41698e3cd1a152f1d563275f1995871db7bfd12c0d7eedd9364c15e8a931a7", size = 37103, upload-time = "2026-02-12T13:34:30.43Z" },
 ]
-provides-extras = ["dev", "postgres-async", "postgres-sync", "sqlite-async"]
 
 [[package]]
 name = "dotenv"
@@ -168,6 +152,7 @@ dependencies = [
     { name = "dbwarden" },
     { name = "dotenv" },
     { name = "fastapi" },
+    { name = "fastcrud" },
     { name = "httpx" },
     { name = "psycopg2" },
     { name = "rcon" },
@@ -179,9 +164,10 @@ dependencies = [
 requires-dist = [
     { name = "aiosqlite", specifier = ">=0.22.1" },
     { name = "asyncpg", specifier = ">=0.31.0" },
-    { name = "dbwarden", editable = "../dbwarden" },
+    { name = "dbwarden", specifier = ">=0.1.2" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "fastapi", specifier = ">=0.128.0" },
+    { name = "fastcrud", specifier = ">=0.21.0" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "psycopg2", specifier = ">=2.9.11" },
     { name = "rcon", specifier = ">=2.4.9" },
@@ -202,6 +188,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/52/08/8c8508db6c7b9aae8f7175046af41baad690771c9bcde676419965e338c7/fastapi-0.128.0.tar.gz", hash = "sha256:1cc179e1cef10a6be60ffe429f79b829dce99d8de32d7acb7e6c8dfdf7f2645a", size = 365682, upload-time = "2025-12-27T15:21:13.714Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5c/05/5cbb59154b093548acd0f4c7c474a118eda06da25aa75c616b72d8fcd92a/fastapi-0.128.0-py3-none-any.whl", hash = "sha256:aebd93f9716ee3b4f4fcfe13ffb7cf308d99c9f3ab5622d8877441072561582d", size = 103094, upload-time = "2025-12-27T15:21:12.154Z" },
+]
+
+[[package]]
+name = "fastcrud"
+version = "0.21.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "fastapi" },
+    { name = "pydantic" },
+    { name = "sqlalchemy" },
+    { name = "sqlalchemy-utils" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/91/5c/2ee44d6cc63cc1f039cb218ea2681d6978c3a27b094e2a4bdf02f503f599/fastcrud-0.21.0.tar.gz", hash = "sha256:38990a96d4639e65e6f1c9b8f4cebfe5bf1a84ba731eb5c224fff593a7316e02", size = 79300, upload-time = "2026-01-23T19:30:07.347Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5f/1b/85fb4c1cb771845e5ede668ef28c090e021020d117e891fa1e599c9e32d1/fastcrud-0.21.0-py3-none-any.whl", hash = "sha256:94daa5ca7815a268b700ee31b36455a8248a1a0547f3fcef5969df0047aab338", size = 107150, upload-time = "2026-01-23T19:30:05.895Z" },
 ]
 
 [[package]]
@@ -551,6 +552,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/33/75/f28622ba6dde79cd545055ea7bd4062dc934e0621f7b3be2891f8563f8de/sqlalchemy-2.0.46-cp314-cp314t-musllinux_1_2_aarch64.whl", hash = "sha256:ff33c6e6ad006bbc0f34f5faf941cfc62c45841c64c0a058ac38c799f15b5ede", size = 3470008, upload-time = "2026-01-21T18:33:11.725Z" },
     { url = "https://files.pythonhosted.org/packages/a9/42/4afecbbc38d5e99b18acef446453c76eec6fbd03db0a457a12a056836e22/sqlalchemy-2.0.46-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:82ec52100ec1e6ec671563bbd02d7c7c8d0b9e71a0723c72f22ecf52d1755330", size = 3476137, upload-time = "2026-01-21T18:45:15.001Z" },
     { url = "https://files.pythonhosted.org/packages/fc/a1/9c4efa03300926601c19c18582531b45aededfb961ab3c3585f1e24f120b/sqlalchemy-2.0.46-py3-none-any.whl", hash = "sha256:f9c11766e7e7c0a2767dda5acb006a118640c9fc0a4104214b96269bfb78399e", size = 1937882, upload-time = "2026-01-21T18:22:10.456Z" },
+]
+
+[[package]]
+name = "sqlalchemy-utils"
+version = "0.41.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "sqlalchemy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4d/bf/abfd5474cdd89ddd36dbbde9c6efba16bfa7f5448913eba946fed14729da/SQLAlchemy-Utils-0.41.2.tar.gz", hash = "sha256:bc599c8c3b3319e53ce6c5c3c471120bd325d0071fb6f38a10e924e3d07b9990", size = 138017, upload-time = "2024-03-24T15:17:28.196Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d5/f0/dc4757b83ac1ab853cf222df8535ed73973e0c203d983982ba7b8bc60508/SQLAlchemy_Utils-0.41.2-py3-none-any.whl", hash = "sha256:85cf3842da2bf060760f955f8467b87983fb2e30f1764fd0e24a48307dc8ec6e", size = 93083, upload-time = "2024-03-24T15:17:24.533Z" },
 ]
 
 [[package]]

@@ -7,15 +7,13 @@ requires-python = ">=3.12.7"
 dependencies = [
     "aiosqlite>=0.22.1",
     "asyncpg>=0.31.0",
-    "dbwarden>=1.0.0",
+    "dbwarden>=0.1.2",
     "dotenv>=0.9.9",
     "fastapi>=0.128.0",
+    "fastcrud>=0.21.0",
     "httpx>=0.28.1",
     "psycopg2>=2.9.11",
     "rcon>=2.4.9",
     "sqlalchemy>=2.0.46",
     "uvicorn>=0.40.0",
 ]
-
-[tool.uv.sources]
-dbwarden = { path = "../dbwarden", editable = true }
