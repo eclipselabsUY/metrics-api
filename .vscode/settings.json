@@ -7,6 +7,7 @@
     { "icon": "config", "extensions": ["core"], "format": "svg" },
     { "icon": "db", "extensions": ["crud"], "format": "svg" },
     { "icon": "redux", "extensions": ["metrics"], "format": "svg" },
-    { "icon": "route", "extensions": ["status"], "format": "svg" }
+    { "icon": "route", "extensions": ["status"], "format": "svg" },
+    { "icon": "blueprint", "extensions": ["schemas"], "format": "svg" }
   ]
 }
