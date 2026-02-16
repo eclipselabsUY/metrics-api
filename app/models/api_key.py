@@ -11,6 +11,8 @@ class ApiKey(Base):
     # hash Argon2 de la key
     key_hash = Column(String(255), nullable=False, unique=True)
 
+    prefix = Column(String(32), nullable=False, index=True)
+
     service_id = Column(
         Integer,
         ForeignKey("services.id", ondelete="CASCADE"),
