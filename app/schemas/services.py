@@ -1,4 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
+from typing import Optional, List
+
+from app.core.enums import ServiceKind
 
 class ServiceCreate(BaseModel):
     name: str
@@ -10,3 +13,33 @@ class ServiceUpdate(BaseModel):
     name: str | None = None
     url: str | None = None
     service_type_id: int | None = None
+
+class ServiceRead(BaseModel):
+    name : str
+    url : str
+    service_type_id : str
+
+class ServiceTypeCreate(BaseModel):
+    name :  str
+    kind : ServiceKind
+
+    @field_validator("kind", mode="before")
+    def normalize_kind(cls, v):
+        if isinstance(v, str):
+            return v.lower()
+        return v
+    
+class ServiceTypeUpdate(BaseModel):
+    name  : Optional[str]
+    kind : Optional[ServiceKind]
+
+    @field_validator("kind", mode="before")
+    def normalize_kind(cls, v):
+        if isinstance(v, str):
+            return v.lower()
+        return v
+
+class ServiceTypeRead(BaseModel):
+    id : int
+    name : str
+    services : List[ServiceRead] = [] 
