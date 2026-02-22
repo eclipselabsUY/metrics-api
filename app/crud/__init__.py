@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from app.crud.services import service_router
+from app.crud.event_types import event_type_router
 
 crud_router = APIRouter()
 
-crud_router.include_router(service_router)
+crud_router.include_router(service_router, prefix="/services")
+crud_router.include_router(event_type_router, prefix="/events")
