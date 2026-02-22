@@ -218,21 +218,20 @@ wheels = [
 
 [[package]]
 name = "dbwarden"
-version = "0.1.2"
+version = "0.1.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiosqlite" },
     { name = "asyncpg" },
     { name = "packaging" },
-    { name = "python-dotenv" },
     { name = "pyyaml" },
     { name = "rich" },
     { name = "sqlalchemy" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/62/1b/d5aa1995f5f0aea440075ba8bc0cac8f1862fb7761d3eebdf0821ca4afe5/dbwarden-0.1.2.tar.gz", hash = "sha256:2176f2adfb51165b6f477dcdcb9ff0e06bd23280f7f14918d48cb1af3dd6bf06", size = 66474, upload-time = "2026-02-12T13:34:31.934Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9f/ba/8e3372c2a84349268b464b7a8dd108f8c7cd2c3cede2989317281e73d84a/dbwarden-0.1.3.1.tar.gz", hash = "sha256:662765a66eb2a5662df4949a566347b3befe600777c3f729818ed81d81dd0e0c", size = 103854, upload-time = "2026-02-16T20:46:56.159Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/87/0b/80c8509e78552a58cfc8816d06dbff4e17283287791a094e2a0b8a545263/dbwarden-0.1.2-py3-none-any.whl", hash = "sha256:8e41698e3cd1a152f1d563275f1995871db7bfd12c0d7eedd9364c15e8a931a7", size = 37103, upload-time = "2026-02-12T13:34:30.43Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/91/50c473062795eef6b5ac466dc61c293c9778460d8a5d3b6cb4961f237da3/dbwarden-0.1.3.1-py3-none-any.whl", hash = "sha256:7dc86c151f6f1915147f21c43e02391e490977367d352d44becb33e7e008e934", size = 37642, upload-time = "2026-02-16T20:46:54.255Z" },
 ]
 
 [[package]]
@@ -270,7 +269,7 @@ requires-dist = [
     { name = "aiosqlite", specifier = ">=0.22.1" },
     { name = "argon2-cffi", specifier = ">=25.1.0" },
     { name = "asyncpg", specifier = ">=0.31.0" },
-    { name = "dbwarden", specifier = ">=0.1.2" },
+    { name = "dbwarden", specifier = ">=0.1.3.1" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "fastapi", specifier = ">=0.128.0" },
     { name = "fastcrud", specifier = ">=0.21.0" },
@@ -607,15 +606,15 @@ wheels = [
 
 [[package]]
 name = "rich"
-version = "14.3.2"
+version = "14.3.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "markdown-it-py" },
     { name = "pygments" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/74/99/a4cab2acbb884f80e558b0771e97e21e939c5dfb460f488d19df485e8298/rich-14.3.2.tar.gz", hash = "sha256:e712f11c1a562a11843306f5ed999475f09ac31ffb64281f73ab29ffdda8b3b8", size = 230143, upload-time = "2026-02-01T16:20:47.908Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/c6/f3b320c27991c46f43ee9d856302c70dc2d0fb2dba4842ff739d5f46b393/rich-14.3.3.tar.gz", hash = "sha256:b8daa0b9e4eef54dd8cf7c86c03713f53241884e814f4e2f5fb342fe520f639b", size = 230582, upload-time = "2026-02-19T17:23:12.474Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ef/45/615f5babd880b4bd7d405cc0dc348234c5ffb6ed1ea33e152ede08b2072d/rich-14.3.2-py3-none-any.whl", hash = "sha256:08e67c3e90884651da3239ea668222d19bea7b589149d8014a21c633420dbb69", size = 309963, upload-time = "2026-02-01T16:20:46.078Z" },
+    { url = "https://files.pythonhosted.org/packages/14/25/b208c5683343959b670dc001595f2f3737e051da617f66c31f7c4fa93abc/rich-14.3.3-py3-none-any.whl", hash = "sha256:793431c1f8619afa7d3b52b2cdec859562b950ea0d4b6b505397612db8d5362d", size = 310458, upload-time = "2026-02-19T17:23:13.732Z" },
 ]
 
 [[package]]
@@ -696,17 +695,17 @@ wheels = [
 
 [[package]]
 name = "typer"
-version = "0.21.1"
+version = "0.24.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "annotated-doc" },
     { name = "click" },
     { name = "rich" },
     { name = "shellingham" },
-    { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/36/bf/8825b5929afd84d0dabd606c67cd57b8388cb3ec385f7ef19c5cc2202069/typer-0.21.1.tar.gz", hash = "sha256:ea835607cd752343b6b2b7ce676893e5a0324082268b48f27aa058bdb7d2145d", size = 110371, upload-time = "2026-01-06T11:21:10.989Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5a/b6/3e681d3b6bb22647509bdbfdd18055d5adc0dce5c5585359fa46ff805fdc/typer-0.24.0.tar.gz", hash = "sha256:f9373dc4eff901350694f519f783c29b6d7a110fc0dcc11b1d7e353b85ca6504", size = 118380, upload-time = "2026-02-16T22:08:48.496Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a0/1d/d9257dd49ff2ca23ea5f132edf1281a0c4f9de8a762b9ae399b670a59235/typer-0.21.1-py3-none-any.whl", hash = "sha256:7985e89081c636b88d172c2ee0cfe33c253160994d47bdfdc302defd7d1f1d01", size = 47381, upload-time = "2026-01-06T11:21:09.824Z" },
+    { url = "https://files.pythonhosted.org/packages/85/d0/4da85c2a45054bb661993c93524138ace4956cb075a7ae0c9d1deadc331b/typer-0.24.0-py3-none-any.whl", hash = "sha256:5fc435a9c8356f6160ed6e85a6301fdd6e3d8b2851da502050d1f92c5e9eddc8", size = 56441, upload-time = "2026-02-16T22:08:47.535Z" },
 ]
 
 [[package]]
