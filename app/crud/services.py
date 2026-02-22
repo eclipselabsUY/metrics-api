@@ -1,12 +1,12 @@
-from fastcrud import crud_router, EndpointCreator
+from fastcrud import crud_router, EndpointCreator, FastCRUD
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
 
 from app.core.database import get_async_db
-from app.models.service import Service
+from app.models.service import Service, ServiceType
 from app.models.api_key import ApiKey
-from app.schemas.services import ServiceCreate, ServiceUpdate
+from app.schemas.services import ServiceCreate, ServiceUpdate, ServiceRead, ServiceTypeCreate, ServiceTypeUpdate, ServiceTypeRead
 from app.core.security import generate_api_key, hash_api_key, verify_api_key
 
 class ServiceEndpointCreator(EndpointCreator):
@@ -37,15 +37,31 @@ class ServiceEndpointCreator(EndpointCreator):
     
         return create_service
 
-service_router = crud_router(session=get_async_db,
-                                 model = Service,
-                                 create_schema=ServiceCreate,
-                                 update_schema=ServiceUpdate,
-                                 path="/services",
-                                 tags=["Services"],
-                                 endpoint_creator=ServiceEndpointCreator
-                                 )
+service_router = crud_router(
+    session=get_async_db,
+    model = Service,
+    create_schema=ServiceCreate,
+    update_schema=ServiceUpdate,
+    select_schema=ServiceRead,
+    path="",
+    tags=["Services"],
+    endpoint_creator=ServiceEndpointCreator,
+    )
 
+service_type_crud = FastCRUD(ServiceType)
+
+service_type_router = crud_router(
+    session=get_async_db,
+    model = ServiceType,
+    create_schema=ServiceTypeCreate,
+    update_schema=ServiceTypeUpdate,
+    select_schema=ServiceTypeRead,
+    path="/types",
+    tags=["ServiceTypes"],
+    crud=service_type_crud,    
+)
+
+service_router.include_router(service_type_router)
 
 async def find_service_by_apikey(db: AsyncSession, raw_api_key: str) -> Service | None:
     
