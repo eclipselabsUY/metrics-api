@@ -14,5 +14,6 @@ event_type_router = crud_router(
     select_schema=EventTypeRead,
     crud=event_type_crud,
     path="",
+    endpoint_names={"read" : "get", "read_multi" : "get", "update" : "update", "delete" : "delete", "create" : "create"},
     tags=["EventType"]
 )
