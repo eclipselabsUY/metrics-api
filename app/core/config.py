@@ -17,6 +17,7 @@ SERVICES = [
 
 # Keys and Passwords
 API_KEY = os.getenv("API_KEY")
+ADMIN_API_KEY = os.getenv("ADMIN_API_KEY") 
 RCON_PASSWORD = os.getenv("RCON_PASSWORD")
 POSTGRES_USER = os.getenv("POSTGRES_USER")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
