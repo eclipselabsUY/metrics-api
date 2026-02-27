@@ -15,7 +15,6 @@ class Event(Base):
     client_ip = Column(String(45), nullable=True)  # soporta IPv6
     event_metadata = Column(
         JSON, nullable=True
-    )  # para Postgres; en SQLite puedes usar JSON o Text
-
+    )  # para Postgres; en SQLite puedes usar JSON o Text    
     # Relación con EventType
     event_type = relationship("EventType", back_populates="events")
