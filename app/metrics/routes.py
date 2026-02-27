@@ -6,8 +6,8 @@ from app.services.auth import validate_api_key
 
 router = APIRouter()
 
-@router.post("/metrics/event", dependencies=Depends(validate_api_key))
-def new_event(request : Request, event : EventIn):
+@router.post("/event", dependencies=Depends(validate_api_key))
+async def new_event(request : Request, event : EventIn):
     event_data = {
         "method" : request.method,
         "url" : request.url.path,
