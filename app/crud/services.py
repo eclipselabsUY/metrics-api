@@ -14,7 +14,12 @@ from app.schemas.services import (
     ServiceTypeUpdate,
     ServiceTypeRead,
 )
-from app.core.security import generate_api_key, hash_api_key, verify_api_key
+from app.core.security import (
+    generate_api_key,
+    hash_api_key,
+    verify_api_key,
+    verify_admin_key,
+)
 
 
 class ServiceEndpointCreator(EndpointCreator):
@@ -61,14 +66,14 @@ class ServiceEndpointCreator(EndpointCreator):
         deleted_methods=None,
         **kwargs,
     ):
-        # Add custom POST /services endpoint (before super() to avoid conflict)
+        # Add custom POST /services/create endpoint with admin key protection
         self.router.add_api_route(
-            path="/",
+            path="/create",
             endpoint=self._create_service_with_key(),
             methods=["POST"],
             response_model=dict,
             tags=self.tags,
-            dependencies=create_deps,
+            dependencies=[Depends(dep) for dep in create_deps] if create_deps else [],
         )
 
         # Call parent with same parameters (will skip 'create' due to deleted_methods)
@@ -93,7 +98,18 @@ service_router = crud_router(
     path="",
     tags=["Services"],
     endpoint_creator=ServiceEndpointCreator,
+    endpoint_names={
+        "read": "get",
+        "read_multi": "get",
+        "update": "update",
+        "delete": "delete",
+    },
     deleted_methods=["create"],
+    create_deps=[verify_admin_key],
+    update_deps=[verify_admin_key],
+    delete_deps=[verify_admin_key],
+    read_deps=[verify_admin_key],
+    read_multi_deps=[verify_admin_key],
 )
 
 service_type_crud = FastCRUD(ServiceType)
@@ -105,8 +121,20 @@ service_type_router = crud_router(
     update_schema=ServiceTypeUpdate,
     select_schema=ServiceTypeRead,
     path="/types",
+    endpoint_names={
+        "read": "get",
+        "read_multi": "get",
+        "update": "update",
+        "delete": "delete",
+        "create": "create",
+    },
     tags=["ServiceTypes"],
     crud=service_type_crud,
+    create_deps=[verify_admin_key],
+    update_deps=[verify_admin_key],
+    delete_deps=[verify_admin_key],
+    read_deps=[verify_admin_key],
+    read_multi_deps=[verify_admin_key],
 )
 
 service_router.include_router(service_type_router)
