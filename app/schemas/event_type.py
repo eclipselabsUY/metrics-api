@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 class EventTypeCreate(BaseModel):
     name : str
     description : str
+    service_id : int
 
 class EventTypeUpdate(BaseModel):
     name : Optional[str]
@@ -17,6 +18,7 @@ class EventTypeRead(BaseModel):
     name: str
     description: Optional[str] = None
     events: List["EventRead"] = Field(default_factory=list)
+    service_id : int
 
     class Config:
         from_attributes = True
