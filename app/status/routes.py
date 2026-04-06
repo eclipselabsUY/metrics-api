@@ -1,13 +1,15 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 import asyncio
 import rcon
 
 from app.status.services import check_http, check_tcp
 from app.core.config import SERVICES, RCON_PASSWORD
+from app.core.security import verify_admin_key
 
 router = APIRouter()
 
-@router.get("/status")
+
+@router.get("/status", dependencies=[Depends(verify_admin_key)])
 async def services_status():
     response = []
 
@@ -17,31 +19,31 @@ async def services_status():
             tasks.append(check_http(service))
         else:
             tasks.append(check_tcp(service))
-    
+
     results = await asyncio.gather(*tasks)
 
     for i, service in enumerate(SERVICES):
-        response.append({
-            "service": service["name"],
-            "status": results[i]
-        })
+        response.append({"service": service["name"], "status": results[i]})
 
     return response
-        
 
-@router.get("/fingcraft-stats")
+
+@router.get("/fingcraft-stats", dependencies=[Depends(verify_admin_key)])
 async def fingcraft_status():
 
     response = []
 
     with rcon.Client("fingcraft", 25575, passwd=RCON_PASSWORD) as client:
-        response.append({"current_players": await asyncio.to_thread(client.run, "list")})
+        response.append(
+            {"current_players": await asyncio.to_thread(client.run, "list")}
+        )
         response.append({"time": await asyncio.to_thread(client.run, "time")})
         response.append({"stats": await asyncio.to_thread(client.run, "memory")})
         response.append({"version": await asyncio.to_thread(client.run, "version")})
 
     return response
 
+
 @router.get("/health")
 def health_point():
-    return {"status_code" : "200"}
+    return {"status_code": "200"}
