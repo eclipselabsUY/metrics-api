@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Instalamos dependencias
 RUN pip install --no-cache-dir uv \
-    && uv sync
+    && uv sync --frozen
 
 # Copiamos toda la app
 COPY . .
@@ -27,4 +27,4 @@ COPY . .
 EXPOSE 8000
 
 # Comando para correr FastAPI con uvicorn
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["/app/.venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
