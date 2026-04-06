@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12.7"
 dependencies = [
     "aiosqlite>=0.22.1",
+    "aiochclient[aiohttp]>=2.6.0",
     "argon2-cffi>=25.1.0",
     "asyncpg>=0.31.0",
     "dbwarden>=0.1.5",
