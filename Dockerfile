@@ -11,6 +11,11 @@ WORKDIR /app
 # Copiamos archivos de requirements primero para caching
 COPY pyproject.toml .
 
+# System deps for psycopg2
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev gcc \
+    && rm -rf /var/lib/apt/lists/*
+
 # Instalamos dependencias
 RUN pip install --no-cache-dir uv \
     && uv sync
