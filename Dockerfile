@@ -13,7 +13,7 @@ COPY pyproject.toml .
 
 # System deps for psycopg2
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev gcc \
+    libpq-dev gcc libc6-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalamos dependencias
