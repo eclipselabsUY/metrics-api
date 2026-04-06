@@ -8,22 +8,50 @@ load_dotenv(dotenv_path)
 
 # Current EGO Services
 SERVICES = [
-    {"name": "www.ego-services.com", "type": "http", "url": "https://www.ego-services.com"},
-    {"name": "backdoor.ego-services.com", "type": "http", "url": "https://backdoor.ego-services.com/health"},
-    {"name": "fingcraft.ego-services.com", "type": "tcp", "host": "fingcraft.ego-services.com", "port": 25565},
-    {"name": "ssh.ego-services.com", "type": "tcp", "host": "ssh.ego-services.com", "port": 22},
-    {"name": "api.ego-services.com", "type": "http", "url": "http://api.ego-services.com/health"},
+    {
+        "name": "www.ego-services.com",
+        "type": "http",
+        "url": "https://www.ego-services.com",
+    },
+    {
+        "name": "backdoor.ego-services.com",
+        "type": "http",
+        "url": "https://backdoor.ego-services.com/health",
+    },
+    {
+        "name": "fingcraft.ego-services.com",
+        "type": "tcp",
+        "host": "fingcraft.ego-services.com",
+        "port": 25565,
+    },
+    {
+        "name": "ssh.ego-services.com",
+        "type": "tcp",
+        "host": "ssh.ego-services.com",
+        "port": 22,
+    },
+    {
+        "name": "api.ego-services.com",
+        "type": "http",
+        "url": "http://api.ego-services.com/health",
+    },
 ]
 
 # Keys and Passwords
 API_KEY = os.getenv("API_KEY")
-ADMIN_API_KEY = os.getenv("ADMIN_API_KEY") 
+ADMIN_API_KEY = os.getenv("ADMIN_API_KEY")
 RCON_PASSWORD = os.getenv("RCON_PASSWORD")
 POSTGRES_USER = os.getenv("POSTGRES_USER")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
 POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
 POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
 POSTGRES_DB = os.getenv("POSTGRES_DB")
+
+CLICKHOUSE_HOST = os.getenv("CLICKHOUSE_HOST", "localhost")
+CLICKHOUSE_PORT = os.getenv("CLICKHOUSE_PORT", "8123")
+CLICKHOUSE_USER = os.getenv("CLICKHOUSE_USER", "default")
+CLICKHOUSE_PASSWORD = os.getenv("CLICKHOUSE_PASSWORD", "")
+CLICKHOUSE_DB = os.getenv("CLICKHOUSE_DB", "metrics")
 
 ENVIRONMENT = os.getenv("ENVIRONMENT")
 
@@ -36,3 +64,5 @@ else:
         f"@{POSTGRES_HOST}:{POSTGRES_PORT}"
         f"/{POSTGRES_DB}"
     )
+
+CLICKHOUSE_URL = f"http://{CLICKHOUSE_HOST}:{CLICKHOUSE_PORT}"
