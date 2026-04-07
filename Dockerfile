@@ -9,7 +9,7 @@ ENV PYTHONFAULTHANDLER=1
 WORKDIR /app
 
 # Copiamos archivos de requirements primero para caching
-COPY pyproject.toml .
+COPY pyproject.toml uv.lock ./
 
 # System deps for psycopg2
 RUN apt-get update && apt-get install -y --no-install-recommends \
