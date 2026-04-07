@@ -1,6 +1,7 @@
 from aiochclient import ChClient
 from datetime import datetime
 from typing import Optional
+import json
 
 
 async def init_clickhouse(client: ChClient):
@@ -20,16 +21,14 @@ async def init_clickhouse(client: ChClient):
 
 
 async def create_event(client: ChClient, event_data: dict):
+    metadata_json = json.dumps(event_data.get("metadata", {}), ensure_ascii=False)
     await client.execute(
-        f"""
-        INSERT INTO events (service_id, event_type, method, url, client_ip, metadata, timestamp)
-        VALUES ({int(event_data.get("service_id", 0))}, '{_esc(event_data.get("event_type", ""))}', '{_esc(event_data.get("method", ""))}', '{_esc(event_data.get("url", ""))}', '{_esc(event_data.get("client_ip", ""))}', '{_esc(str(event_data.get("metadata", {})))}', now())
-        """
+        f"INSERT INTO events (service_id, event_type, method, url, client_ip, metadata, timestamp) VALUES ({int(event_data.get('service_id', 0))}, '{_esc(event_data.get('event_type', ''))}', '{_esc(event_data.get('method', ''))}', '{_esc(event_data.get('url', ''))}', '{_esc(event_data.get('client_ip', ''))}', '{_esc(metadata_json)}', now())"
     )
 
 
 def _esc(s: str) -> str:
-    return s.replace("'", "\\'").replace("\\", "\\\\")
+    return s.replace("\\", "\\\\").replace("'", "\\'")
 
 
 async def get_events(
