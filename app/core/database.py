@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from contextlib import contextmanager
 from aiochclient import ChClient
 from aiohttp import ClientSession
+import redis.asyncio as aioredis
 
 from app.core.config import (
     DATABASE_URL,
@@ -11,6 +12,9 @@ from app.core.config import (
     CLICKHOUSE_DB,
     CLICKHOUSE_USER,
     CLICKHOUSE_PASSWORD,
+    REDIS_HOST,
+    REDIS_PORT,
+    REDIS_PASSWORD,
 )
 
 
@@ -76,3 +80,27 @@ async def close_clickhouse_client():
         await _ch_session.close()
         _ch_session = None
         _ch_client = None
+
+
+# Redis
+
+_redis_client = None
+
+
+async def get_redis_client() -> aioredis.Redis:
+    global _redis_client
+    if _redis_client is None:
+        _redis_client = aioredis.Redis(
+            host=REDIS_HOST,
+            port=REDIS_PORT,
+            password=REDIS_PASSWORD or None,
+            decode_responses=True,
+        )
+    return _redis_client
+
+
+async def close_redis_client():
+    global _redis_client
+    if _redis_client:
+        await _redis_client.aclose()
+        _redis_client = None

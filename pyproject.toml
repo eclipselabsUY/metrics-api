@@ -16,6 +16,7 @@ dependencies = [
     "httpx>=0.28.1",
     "psycopg2>=2.9.11",
     "rcon>=2.4.9",
+    "redis[hiredis]>=6.0.0",
     "sqlalchemy>=2.0.46",
     "uvicorn>=0.40.0",
 ]
