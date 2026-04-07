@@ -12,7 +12,7 @@ def validate_api_key(request: Request, db: AsyncSession = Depends(get_async_db))
     if not api_key:
         raise HTTPException(401)
 
-    service = find_service_by_api_key(db, api_key)
+    service = find_service_by_apikey(db, api_key)
 
     if not service:
         raise HTTPException(403)
