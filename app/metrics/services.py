@@ -21,20 +21,15 @@ async def init_clickhouse(client: ChClient):
 
 async def create_event(client: ChClient, event_data: dict):
     await client.execute(
-        """
+        f"""
         INSERT INTO events (service_id, event_type, method, url, client_ip, metadata, timestamp)
-        VALUES (%(service_id)s, %(event_type)s, %(method)s, %(url)s, %(client_ip)s, %(metadata)s, %(timestamp)s)
-        """,
-        {
-            "service_id": event_data.get("service_id", 0),
-            "event_type": event_data.get("event_type", ""),
-            "method": event_data.get("method", ""),
-            "url": event_data.get("url", ""),
-            "client_ip": event_data.get("client_ip", ""),
-            "metadata": str(event_data.get("metadata", {})),
-            "timestamp": datetime.utcnow(),
-        },
+        VALUES ({int(event_data.get("service_id", 0))}, '{_esc(event_data.get("event_type", ""))}', '{_esc(event_data.get("method", ""))}', '{_esc(event_data.get("url", ""))}', '{_esc(event_data.get("client_ip", ""))}', '{_esc(str(event_data.get("metadata", {})))}', now())
+        """
     )
+
+
+def _esc(s: str) -> str:
+    return s.replace("'", "\\'").replace("\\", "\\\\")
 
 
 async def get_events(
@@ -47,23 +42,18 @@ async def get_events(
     end_date: Optional[datetime] = None,
 ):
     conditions = []
-    params = {"limit": limit, "offset": offset}
 
     if service_id is not None:
-        conditions.append("service_id = %(service_id)s")
-        params["service_id"] = service_id
+        conditions.append(f"service_id = {int(service_id)}")
 
     if event_type:
-        conditions.append("event_type = %(event_type)s")
-        params["event_type"] = event_type
+        conditions.append(f"event_type = '{_esc(event_type)}'")
 
     if start_date:
-        conditions.append("timestamp >= %(start_date)s")
-        params["start_date"] = start_date
+        conditions.append(f"timestamp >= '{start_date}'")
 
     if end_date:
-        conditions.append("timestamp <= %(end_date)s")
-        params["end_date"] = end_date
+        conditions.append(f"timestamp <= '{end_date}'")
 
     where_clause = " AND ".join(conditions) if conditions else "1=1"
 
@@ -72,10 +62,10 @@ async def get_events(
         FROM events
         WHERE {where_clause}
         ORDER BY timestamp DESC
-        LIMIT %(limit)s OFFSET %(offset)s
+        LIMIT {int(limit)} OFFSET {int(offset)}
     """
 
-    rows = await client.fetch(query, params)
+    rows = await client.fetch(query)
     return [
         {
             "id": row[0],
@@ -99,26 +89,21 @@ async def get_event_count(
     end_date: Optional[datetime] = None,
 ) -> int:
     conditions = []
-    params = {}
 
     if service_id is not None:
-        conditions.append("service_id = %(service_id)s")
-        params["service_id"] = service_id
+        conditions.append(f"service_id = {int(service_id)}")
 
     if event_type:
-        conditions.append("event_type = %(event_type)s")
-        params["event_type"] = event_type
+        conditions.append(f"event_type = '{_esc(event_type)}'")
 
     if start_date:
-        conditions.append("timestamp >= %(start_date)s")
-        params["start_date"] = start_date
+        conditions.append(f"timestamp >= '{start_date}'")
 
     if end_date:
-        conditions.append("timestamp <= %(end_date)s")
-        params["end_date"] = end_date
+        conditions.append(f"timestamp <= '{end_date}'")
 
     where_clause = " AND ".join(conditions) if conditions else "1=1"
 
     query = f"SELECT count() FROM events WHERE {where_clause}"
-    result = await client.fetchrow(query, params)
+    result = await client.fetchrow(query)
     return result[0] if result else 0
