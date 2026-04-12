@@ -70,7 +70,6 @@ else:
         f"{POSTGRES_USER}:{POSTGRES_PASSWORD}"
         f"@{POSTGRES_HOST}:{POSTGRES_PORT}"
         f"/{POSTGRES_DB}"
-        f"?sslmode=require"
     )
 
-CLICKHOUSE_URL = f"https://{CLICKHOUSE_HOST}:{CLICKHOUSE_PORT}"
+CLICKHOUSE_URL = f"http://{CLICKHOUSE_HOST}:{CLICKHOUSE_PORT}"
