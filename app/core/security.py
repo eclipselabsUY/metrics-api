@@ -1,8 +1,10 @@
+import hmac
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 import secrets
 from fastapi import HTTPException, Header
 from app.core.config import ADMIN_API_KEY
+from typing import cast
 
 ph = PasswordHasher()
 
@@ -35,7 +37,11 @@ def verify_api_key(secret: str, hashed_key: str) -> bool:
         return True
     except VerifyMismatchError:
         return False
-    
+
+
 async def verify_admin_key(x_admin_key: str = Header(...)):
-    if x_admin_key != ADMIN_API_KEY:
-        raise HTTPException(403, "Invalid admin key")
+    admin_key = cast(str, ADMIN_API_KEY)
+    if not admin_key:
+        raise HTTPException(500, "Server misconfigured")
+    if not hmac.compare_digest(x_admin_key, admin_key):
+        raise HTTPException(403, "Forbidden")

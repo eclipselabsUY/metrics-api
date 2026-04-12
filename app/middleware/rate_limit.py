@@ -16,9 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 def _get_client_ip(request: Request) -> str:
-    forwarded = request.headers.get("X-Forwarded-For")
-    if forwarded:
-        return forwarded.split(",")[0].strip()
     return request.client.host if request.client else "unknown"
 
 
@@ -89,8 +86,23 @@ async def check_rate_limit(request: Request, redis: aioredis.Redis, identifier: 
 async def rate_limit_middleware(request: Request, call_next):
     api_key = request.headers.get("X-API-Key")
 
+    # Check if we should exempt authenticated requests from rate limiting
     if api_key and api_key.startswith("egos_"):
-        return await call_next(request)
+        # Validate the API key by attempting to find the service
+        from app.crud.services import find_service_by_apikey
+        from app.core.database import get_async_db
+
+        try:
+            # Get database session and validate the API key
+            async for db in get_async_db():
+                service = await find_service_by_apikey(db, api_key)
+                if service:
+                    # Valid API key - exempt from rate limiting
+                    return await call_next(request)
+                break  # Exit the async for loop after first iteration
+        except Exception as e:
+            logger.error(f"API key validation failed: {e}")
+            # Fall through to IP-based rate limiting on validation error
 
     client_ip = _get_client_ip(request)
     identifier = f"ip:{client_ip}"

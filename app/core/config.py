@@ -14,11 +14,6 @@ SERVICES = [
         "url": "https://www.ego-services.com",
     },
     {
-        "name": "backdoor.ego-services.com",
-        "type": "http",
-        "url": "https://backdoor.ego-services.com/health",
-    },
-    {
         "name": "fingcraft.ego-services.com",
         "type": "tcp",
         "host": "fingcraft.ego-services.com",
@@ -57,11 +52,15 @@ REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
 
+ENVIRONMENT = os.getenv("ENVIRONMENT")
+
+# Validate Redis password in production
+if ENVIRONMENT == "PROD" and not REDIS_PASSWORD:
+    raise ValueError("REDIS_PASSWORD must be set in production environment")
+
 RATE_LIMIT_DEFAULT = 50
 RATE_LIMIT_WINDOW = 3600
 RATE_LIMIT_BLOCK_AFTER = 3
-
-ENVIRONMENT = os.getenv("ENVIRONMENT")
 
 if ENVIRONMENT == "DEV":
     DATABASE_URL = "sqlite+aiosqlite:///./egos.db"
@@ -71,6 +70,7 @@ else:
         f"{POSTGRES_USER}:{POSTGRES_PASSWORD}"
         f"@{POSTGRES_HOST}:{POSTGRES_PORT}"
         f"/{POSTGRES_DB}"
+        f"?sslmode=require"
     )
 
-CLICKHOUSE_URL = f"http://{CLICKHOUSE_HOST}:{CLICKHOUSE_PORT}"
+CLICKHOUSE_URL = f"https://{CLICKHOUSE_HOST}:{CLICKHOUSE_PORT}"

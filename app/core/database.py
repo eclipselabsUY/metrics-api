@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from aiochclient import ChClient
 from aiohttp import ClientSession
 import redis.asyncio as aioredis
+import asyncio
 
 from app.core.config import (
     DATABASE_URL,
@@ -58,49 +59,57 @@ def get_sync_db():
 
 _ch_session = None
 _ch_client = None
+_ch_lock = asyncio.Lock()
 
 
 async def get_clickhouse_client() -> ChClient:
     global _ch_client, _ch_session
     if _ch_client is None:
-        _ch_session = ClientSession()
-        _ch_client = ChClient(
-            _ch_session,
-            url=CLICKHOUSE_URL,
-            user=CLICKHOUSE_USER,
-            password=CLICKHOUSE_PASSWORD,
-            database=CLICKHOUSE_DB,
-        )
+        async with _ch_lock:
+            if _ch_client is None:
+                _ch_session = ClientSession()
+                _ch_client = ChClient(
+                    _ch_session,
+                    url=CLICKHOUSE_URL,
+                    user=CLICKHOUSE_USER,
+                    password=CLICKHOUSE_PASSWORD,
+                    database=CLICKHOUSE_DB,
+                )
     return _ch_client
 
 
 async def close_clickhouse_client():
     global _ch_client, _ch_session
-    if _ch_session:
-        await _ch_session.close()
-        _ch_session = None
-        _ch_client = None
+    async with _ch_lock:
+        if _ch_session:
+            await _ch_session.close()
+            _ch_session = None
+            _ch_client = None
 
 
 # Redis
 
 _redis_client = None
+_redis_lock = asyncio.Lock()
 
 
 async def get_redis_client() -> aioredis.Redis:
     global _redis_client
     if _redis_client is None:
-        _redis_client = aioredis.Redis(
-            host=REDIS_HOST,
-            port=REDIS_PORT,
-            password=REDIS_PASSWORD or None,
-            decode_responses=True,
-        )
+        async with _redis_lock:
+            if _redis_client is None:
+                _redis_client = aioredis.Redis(
+                    host=REDIS_HOST,
+                    port=REDIS_PORT,
+                    password=REDIS_PASSWORD or None,
+                    decode_responses=True,
+                )
     return _redis_client
 
 
 async def close_redis_client():
     global _redis_client
-    if _redis_client:
-        await _redis_client.aclose()
-        _redis_client = None
+    async with _redis_lock:
+        if _redis_client:
+            await _redis_client.aclose()
+            _redis_client = None

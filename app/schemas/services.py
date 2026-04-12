@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, HttpUrl
 from typing import Optional, List
 
 from app.core.enums import ServiceKind
