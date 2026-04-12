@@ -2,7 +2,7 @@ from fastcrud import crud_router, FastCRUD
 
 from app.core.database import get_async_db
 from app.schemas.event_type import EventTypeCreate, EventTypeRead, EventTypeUpdate
-from app.models.event_type import EventType
+from app.models.api.event_type import EventType
 from app.core.security import verify_admin_key
 
 event_type_crud = FastCRUD(EventType)

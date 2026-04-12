@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
 
 from app.core.database import get_async_db
-from app.models.service import Service, ServiceType
-from app.models.api_key import ApiKey
+from app.models.api.service import Service, ServiceType
+from app.models.api.api_key import ApiKey
 from app.schemas.services import (
     ServiceCreate,
     ServiceUpdate,

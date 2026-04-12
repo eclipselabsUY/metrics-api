@@ -1,7 +1,7 @@
 from fastcrud import crud_router, FastCRUD
 
 from app.core.database import get_async_db
-from app.models.rate_limit import RateLimitConfig
+from app.models.api.rate_limit import RateLimitConfig
 from app.schemas.rate_limit import (
     RateLimitConfigCreate,
     RateLimitConfigRead,

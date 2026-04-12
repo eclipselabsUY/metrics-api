@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from app.core.database import get_async_db
 from app.schemas.event import EventCreate, EventRead, EventUpdate
-from app.models.event import Event
+from app.models.api.event import Event
 
 
 class EventEndpointCreator(EndpointCreator):

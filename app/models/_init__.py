@@ -1,15 +1,13 @@
-from app.models.api_key import ApiKey
-from app.models.event import Event
-from app.models.service import Service, ServiceType
-from app.models.event_type import EventType
-from app.models.rate_limit import RateLimitConfig
-from app.core.enums import ServiceKind
+from app.models.api.api_key import ApiKey
+from app.models.api.event import Event
+from app.models.api.service import Service, ServiceType
+from app.models.api.event_type import EventType
+from app.models.api.rate_limit import RateLimitConfig
 
 __all__ = [
     "ApiKey",
     "Event",
     "Service",
-    "ServiceKind",
     "ServiceType",
     "EventType",
     "RateLimitConfig",
