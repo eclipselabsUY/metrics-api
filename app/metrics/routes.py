@@ -20,7 +20,7 @@ async def new_event(request: Request, event: EventIn):
         "service_id": service_id,
         "method": request.method,
         "url": request.url.path,
-        "cookies": request.cookies,
+        # Removed cookie collection for privacy and security
         "client_ip": request.client.host if request.client else "",
         "event_type": event.event_type,
         "metadata": event.metadata,
