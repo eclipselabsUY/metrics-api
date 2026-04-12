@@ -30,9 +30,6 @@ COPY . .
 RUN chown -R appuser:appuser /app
 USER appuser
 
-# Run database migrations for both databases
-RUN uv run dbwarden migrate --all
-
 # Exponemos puerto de la API
 EXPOSE 8000
 
@@ -40,5 +37,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8000/health || exit 1
 
-# Comando para correr FastAPI con uvicorn
-CMD ["/app/.venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run migrations before starting the app
+CMD ["sh", "-c", "uv run dbwarden migrate --all && /app/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000"]
