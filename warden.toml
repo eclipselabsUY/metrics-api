@@ -1,2 +1,13 @@
-sqlalchemy_url = "sqlite:///./egos.db"
-async = true
+default = "postgres"
+
+[database]
+
+[database.postgres]
+database_type = "postgresql"
+sqlalchemy_url = "postgresql://postgres:PLdbmdVsFABafzjaXTTTipSyvfPxHrqU@postgres.railway.internal:5432/railway"
+model_paths = ["app/models/api"]
+
+[database.clickhouse]
+database_type = "clickhouse"
+sqlalchemy_url = "http://clickhouse:H90wCCadx45oemdsYByBlYlKtFI2UXqS@clickhouse.railway.internal:8123/railway"
+model_paths = ["app/models/metrics"]

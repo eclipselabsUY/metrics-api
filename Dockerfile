@@ -1,6 +1,9 @@
 # Usamos Python 3.12 slim para tener algo liviano
 FROM python:3.12-slim
 
+# Create non-root user
+RUN adduser --disabled-password --gecos '' appuser
+
 # Evitamos buffers de stdout/stderr
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONFAULTHANDLER=1
@@ -23,8 +26,19 @@ RUN pip install --no-cache-dir uv \
 # Copiamos toda la app
 COPY . .
 
+# Change ownership to non-root user
+RUN chown -R appuser:appuser /app
+USER appuser
+
+# Run database migrations for both databases
+RUN uv run dbwarden migrate --all
+
 # Exponemos puerto de la API
 EXPOSE 8000
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
 
 # Comando para correr FastAPI con uvicorn
 CMD ["/app/.venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
