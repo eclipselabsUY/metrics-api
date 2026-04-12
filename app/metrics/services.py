@@ -318,3 +318,96 @@ async def get_view_count(
     query = f"SELECT count() FROM page_views WHERE {where_clause}"
     result = await client.fetchrow(query, query_params=params)
     return result[0] if result else 0
+
+
+async def get_events_timeline(
+    client: ChClient,
+    service_id: Optional[int] = None,
+    event_type: Optional[str] = None,
+    start_date: Optional[datetime] = None,
+    end_date: Optional[datetime] = None,
+    interval_hours: int = 1,
+) -> list:
+    conditions = []
+    params = {}
+
+    if service_id is not None:
+        conditions.append("service_id = {service_id:UInt32}")
+        params["service_id"] = int(service_id)
+
+    if event_type:
+        conditions.append("event_type = {event_type:String}")
+        params["event_type"] = _validate_string(event_type, 255)
+
+    if start_date:
+        conditions.append("timestamp >= {start_date:DateTime64(3)}")
+        params["start_date"] = start_date.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+
+    if end_date:
+        conditions.append("timestamp <= {end_date:DateTime64(3)}")
+        params["end_date"] = end_date.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+
+    where_clause = " AND ".join(conditions) if conditions else "1=1"
+
+    query = f"""
+        SELECT 
+            toStartOfInterval(timestamp, INTERVAL {interval_hours} hour) as time_bucket,
+            count() as count
+        FROM events
+        WHERE {where_clause}
+        GROUP BY time_bucket
+        ORDER BY time_bucket
+    """
+
+    rows = await client.fetch(query, query_params=params)
+    return [
+        {
+            "timestamp": row[0].isoformat() if row[0] else None,
+            "count": row[1],
+        }
+        for row in rows
+    ]
+
+
+async def get_views_timeline(
+    client: ChClient,
+    service_id: Optional[int] = None,
+    start_date: Optional[datetime] = None,
+    end_date: Optional[datetime] = None,
+    interval_hours: int = 1,
+) -> list:
+    conditions = []
+    params = {}
+
+    if service_id is not None:
+        conditions.append("service_id = {service_id:UInt32}")
+        params["service_id"] = int(service_id)
+
+    if start_date:
+        conditions.append("timestamp >= {start_date:DateTime64(3)}")
+        params["start_date"] = start_date.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+
+    if end_date:
+        conditions.append("timestamp <= {end_date:DateTime64(3)}")
+        params["end_date"] = end_date.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+
+    where_clause = " AND ".join(conditions) if conditions else "1=1"
+
+    query = f"""
+        SELECT 
+            toStartOfInterval(timestamp, INTERVAL {interval_hours} hour) as time_bucket,
+            count() as count
+        FROM page_views
+        WHERE {where_clause}
+        GROUP BY time_bucket
+        ORDER BY time_bucket
+    """
+
+    rows = await client.fetch(query, query_params=params)
+    return [
+        {
+            "timestamp": row[0].isoformat() if row[0] else None,
+            "count": row[1],
+        }
+        for row in rows
+    ]

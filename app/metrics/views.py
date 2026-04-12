@@ -8,6 +8,7 @@ from app.metrics.services import (
     get_views,
     get_view_stats,
     get_view_count,
+    get_views_timeline,
 )
 from app.core.database import get_clickhouse_client
 from app.core.security import verify_admin_key
@@ -93,3 +94,21 @@ async def count_views(
         end_date=end_date,
     )
     return {"count": count}
+
+
+@router.get("/views/timeline", dependencies=[Depends(verify_admin_key)])
+async def views_timeline(
+    service_id: Optional[int] = Query(None),
+    start_date: Optional[datetime] = Query(None),
+    end_date: Optional[datetime] = Query(None),
+    interval_hours: int = Query(1, ge=1, le=24),
+):
+    client = await get_clickhouse_client()
+    timeline = await get_views_timeline(
+        client,
+        service_id=service_id,
+        start_date=start_date,
+        end_date=end_date,
+        interval_hours=interval_hours,
+    )
+    return timeline

@@ -3,7 +3,12 @@ from datetime import datetime
 from typing import Optional
 
 from app.metrics.schema import EventIn
-from app.metrics.services import create_event, get_events, get_event_count
+from app.metrics.services import (
+    create_event,
+    get_events,
+    get_event_count,
+    get_events_timeline,
+)
 from app.core.database import get_clickhouse_client
 from app.core.security import verify_admin_key
 from app.services.auth import validate_api_key
@@ -69,3 +74,23 @@ async def count_events(
         end_date=end_date,
     )
     return {"count": count}
+
+
+@router.get("/events/timeline", dependencies=[Depends(verify_admin_key)])
+async def events_timeline(
+    service_id: Optional[int] = Query(None),
+    event_type: Optional[str] = Query(None),
+    start_date: Optional[datetime] = Query(None),
+    end_date: Optional[datetime] = Query(None),
+    interval_hours: int = Query(1, ge=1, le=24),
+):
+    client = await get_clickhouse_client()
+    timeline = await get_events_timeline(
+        client,
+        service_id=service_id,
+        event_type=event_type,
+        start_date=start_date,
+        end_date=end_date,
+        interval_hours=interval_hours,
+    )
+    return timeline
