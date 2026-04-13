@@ -92,7 +92,7 @@ async def get_events(
     params["limit"] = min(int(limit), 1000)
     params["offset"] = max(int(offset), 0)
 
-    rows = await client.fetch(query, query_params=params)
+    rows = await client.fetch(query, params=params)
     return [
         {
             "id": row[0],
@@ -137,7 +137,7 @@ async def get_event_count(
     where_clause = " AND ".join(conditions) if conditions else "1=1"
 
     query = f"SELECT count() FROM events WHERE {where_clause}"
-    result = await client.fetchrow(query, query_params=params)
+    result = await client.fetchrow(query, params=params)
     return result[0] if result else 0
 
 
@@ -150,6 +150,11 @@ def _validate_string(value: str, max_length: int) -> str:
 
 
 async def create_view_event(client: ChClient, view_data: dict):
+    # Handle timestamp - use server time if not provided or None
+    timestamp = view_data.get("timestamp")
+    if timestamp is None:
+        timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+
     await client.execute(
         "INSERT INTO page_views (service_id, path, referrer, user_agent, viewport, document_title, client_ip, timestamp) VALUES",
         (
@@ -160,9 +165,7 @@ async def create_view_event(client: ChClient, view_data: dict):
             _validate_string(view_data.get("viewport", ""), 20),
             _validate_string(view_data.get("document_title", ""), 512),
             _validate_string(view_data.get("client_ip", ""), 45),
-            view_data.get(
-                "timestamp", datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-            ),
+            timestamp,
         ),
     )
 
@@ -207,7 +210,7 @@ async def get_views(
     params["limit"] = min(int(limit), 1000)
     params["offset"] = max(int(offset), 0)
 
-    rows = await client.fetch(query, query_params=params)
+    rows = await client.fetch(query, params=params)
     return [
         {
             "id": row[0],
@@ -314,7 +317,7 @@ async def get_view_count(
     where_clause = " AND ".join(conditions) if conditions else "1=1"
 
     query = f"SELECT count() FROM page_views WHERE {where_clause}"
-    result = await client.fetchrow(query, query_params=params)
+    result = await client.fetchrow(query, params=params)
     return result[0] if result else 0
 
 
@@ -357,7 +360,7 @@ async def get_events_timeline(
         ORDER BY time_bucket
     """
 
-    rows = await client.fetch(query, query_params=params)
+    rows = await client.fetch(query, params=params)
     return [
         {
             "timestamp": row[0].isoformat() if row[0] else None,
@@ -401,7 +404,7 @@ async def get_views_timeline(
         ORDER BY time_bucket
     """
 
-    rows = await client.fetch(query, query_params=params)
+    rows = await client.fetch(query, params=params)
     return [
         {
             "timestamp": row[0].isoformat() if row[0] else None,
