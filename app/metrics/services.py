@@ -3,37 +3,51 @@ from datetime import datetime
 from typing import Optional
 import json
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 async def init_clickhouse(client: ChClient):
-    await client.execute("""
-        CREATE TABLE IF NOT EXISTS events (
-            id UUID DEFAULT generateUUIDv4(),
-            service_id UInt32,
-            event_type String,
-            method String,
-            url String,
-            client_ip String,
-            metadata String,
-            timestamp DateTime64(3) DEFAULT now()
-        ) ENGINE = MergeTree()
-        ORDER BY (timestamp, service_id, event_type)
-    """)
+    """Initialize ClickHouse tables - creates events and page_views if they don't exist"""
+    try:
+        logger.info("Initializing ClickHouse tables...")
 
-    await client.execute("""
-        CREATE TABLE IF NOT EXISTS page_views (
-            id UUID DEFAULT generateUUIDv4(),
-            service_id UInt32,
-            path String,
-            referrer String,
-            user_agent String,
-            viewport String,
-            document_title String,
-            client_ip String,
-            timestamp DateTime64(3) DEFAULT now()
-        ) ENGINE = MergeTree()
-        ORDER BY (timestamp, service_id, path)
-    """)
+        await client.execute("""
+            CREATE TABLE IF NOT EXISTS events (
+                id UUID DEFAULT generateUUIDv4(),
+                service_id UInt32,
+                event_type String,
+                method String,
+                url String,
+                client_ip String,
+                metadata String,
+                timestamp DateTime64(3) DEFAULT now64(3)
+            ) ENGINE = MergeTree()
+            ORDER BY (timestamp, service_id, event_type)
+        """)
+        logger.info("ClickHouse table 'events' ready")
+
+        await client.execute("""
+            CREATE TABLE IF NOT EXISTS page_views (
+                id UUID DEFAULT generateUUIDv4(),
+                service_id UInt32,
+                path String,
+                referrer String,
+                user_agent String,
+                viewport String,
+                document_title String,
+                client_ip String,
+                timestamp DateTime64(3) DEFAULT now64(3)
+            ) ENGINE = MergeTree()
+            ORDER BY (timestamp, service_id, path)
+        """)
+        logger.info("ClickHouse table 'page_views' ready")
+
+        logger.info("ClickHouse initialization complete")
+    except Exception as e:
+        logger.error(f"Failed to initialize ClickHouse tables: {e}")
+        raise
 
 
 async def create_event(client: ChClient, event_data: dict):
