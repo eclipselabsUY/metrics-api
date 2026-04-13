@@ -40,15 +40,15 @@ async def create_event(client: ChClient, event_data: dict):
     metadata_json = json.dumps(event_data.get("metadata", {}), ensure_ascii=False)
     await client.execute(
         "INSERT INTO events (service_id, event_type, method, url, client_ip, metadata, timestamp) VALUES",
-        query_params={
-            "service_id": int(event_data.get("service_id", 0)),
-            "event_type": _validate_string(event_data.get("event_type", ""), 255),
-            "method": _validate_string(event_data.get("method", ""), 16),
-            "url": _validate_string(event_data.get("url", ""), 2048),
-            "client_ip": _validate_string(event_data.get("client_ip", ""), 45),
-            "metadata": _validate_string(metadata_json, 65535),
-            "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3],
-        },
+        (
+            int(event_data.get("service_id", 0)),
+            _validate_string(event_data.get("event_type", ""), 255),
+            _validate_string(event_data.get("method", ""), 16),
+            _validate_string(event_data.get("url", ""), 2048),
+            _validate_string(event_data.get("client_ip", ""), 45),
+            _validate_string(metadata_json, 65535),
+            datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3],
+        ),
     )
 
 
@@ -152,20 +152,18 @@ def _validate_string(value: str, max_length: int) -> str:
 async def create_view_event(client: ChClient, view_data: dict):
     await client.execute(
         "INSERT INTO page_views (service_id, path, referrer, user_agent, viewport, document_title, client_ip, timestamp) VALUES",
-        query_params={
-            "service_id": int(view_data.get("service_id", 0)),
-            "path": _validate_string(view_data.get("path", ""), 2048),
-            "referrer": _validate_string(view_data.get("referrer", ""), 2048),
-            "user_agent": _validate_string(view_data.get("user_agent", ""), 512),
-            "viewport": _validate_string(view_data.get("viewport", ""), 20),
-            "document_title": _validate_string(
-                view_data.get("document_title", ""), 512
-            ),
-            "client_ip": _validate_string(view_data.get("client_ip", ""), 45),
-            "timestamp": view_data.get(
+        (
+            int(view_data.get("service_id", 0)),
+            _validate_string(view_data.get("path", ""), 2048),
+            _validate_string(view_data.get("referrer", ""), 2048),
+            _validate_string(view_data.get("user_agent", ""), 512),
+            _validate_string(view_data.get("viewport", ""), 20),
+            _validate_string(view_data.get("document_title", ""), 512),
+            _validate_string(view_data.get("client_ip", ""), 45),
+            view_data.get(
                 "timestamp", datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
             ),
-        },
+        ),
     )
 
 
