@@ -127,6 +127,9 @@ service_type_router = crud_router(
     select_schema=ServiceTypeRead,
     path="/types",
     endpoint_creator=ServiceTypeEndpointCreator,
+    endpoint_names={
+        "read_multi": "list",
+    },
     tags=["ServiceTypes"],
     crud=service_type_crud,
     create_deps=[verify_admin_key],
