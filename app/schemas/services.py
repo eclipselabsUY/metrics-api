@@ -50,3 +50,9 @@ class ServiceTypeRead(BaseModel):
     name: str
     kind: str
     services: List[ServiceRead] = []
+
+    @field_validator("kind", mode="before")
+    def normalize_kind_read(cls, v):
+        if isinstance(v, ServiceKind):
+            return v.value
+        return v

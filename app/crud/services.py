@@ -1,4 +1,4 @@
-from fastcrud import crud_router, EndpointCreator, FastCRUD
+from fastcrud import crud_router, EndpointCreator
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends, APIRouter, HTTPException
@@ -112,163 +112,82 @@ service_router = crud_router(
     read_multi_deps=[verify_admin_key],
 )
 
-service_type_crud = FastCRUD(ServiceType)
+service_type_router = APIRouter(prefix="/types", tags=["ServiceTypes"])
 
 
-class ServiceTypeEndpointCreator(EndpointCreator):
-    def _list_service_types(self):
-        """Custom list endpoint"""
-
-        async def list_service_types(db: AsyncSession = Depends(get_async_db)):
-            query = select(ServiceType)
-            result = await db.execute(query)
-            return result.scalars().all()
-
-        return list_service_types
-
-    def _get_service_type(self):
-        """Custom get single endpoint"""
-
-        async def get_service_type(id: int, db: AsyncSession = Depends(get_async_db)):
-            query = select(ServiceType).where(ServiceType.id == id)
-            result = await db.execute(query)
-            service_type = result.scalar_one_or_none()
-            if not service_type:
-                raise HTTPException(status_code=404, detail="Service type not found")
-            return service_type
-
-        return get_service_type
-
-    def _update_service_type(self):
-        """Custom update endpoint"""
-
-        async def update_service_type(
-            id: int, data: ServiceTypeUpdate, db: AsyncSession = Depends(get_async_db)
-        ):
-            query = select(ServiceType).where(ServiceType.id == id)
-            result = await db.execute(query)
-            service_type = result.scalar_one_or_none()
-            if not service_type:
-                raise HTTPException(status_code=404, detail="Service type not found")
-
-            update_data = data.model_dump(exclude_unset=True)
-            for key, value in update_data.items():
-                setattr(service_type, key, value)
-
-            await db.commit()
-            await db.refresh(service_type)
-            return service_type
-
-        return update_service_type
-
-    def _delete_service_type(self):
-        """Custom delete endpoint"""
-
-        async def delete_service_type(
-            id: int, db: AsyncSession = Depends(get_async_db)
-        ):
-            query = select(ServiceType).where(ServiceType.id == id)
-            result = await db.execute(query)
-            service_type = result.scalar_one_or_none()
-            if not service_type:
-                raise HTTPException(status_code=404, detail="Service type not found")
-
-            await db.delete(service_type)
-            await db.commit()
-            return {"message": "Service type deleted"}
-
-        return delete_service_type
-
-    def add_routes_to_router(
-        self,
-        create_deps=[],
-        read_deps=[],
-        read_multi_deps=[],
-        update_deps=[],
-        delete_deps=[],
-        db_delete_deps=[],
-        included_methods=None,
-        excluded_methods=None,
-        **kwargs,
-    ):
-        self.router.add_api_route(
-            path="/list",
-            endpoint=self._list_service_types(),
-            methods=["GET"],
-            response_model=list[ServiceTypeRead],
-            tags=self.tags,
-            dependencies=[Depends(dep) for dep in read_multi_deps]
-            if read_multi_deps
-            else [],
-        )
-
-        self.router.add_api_route(
-            path="/get/{id}",
-            endpoint=self._get_service_type(),
-            methods=["GET"],
-            response_model=ServiceTypeRead,
-            tags=self.tags,
-            dependencies=[Depends(dep) for dep in read_deps] if read_deps else [],
-        )
-
-        self.router.add_api_route(
-            path="/create",
-            endpoint=self._create_service_type(),
-            methods=["POST"],
-            response_model=ServiceTypeRead,
-            tags=self.tags,
-            dependencies=[Depends(dep) for dep in create_deps] if create_deps else [],
-        )
-
-        self.router.add_api_route(
-            path="/update/{id}",
-            endpoint=self._update_service_type(),
-            methods=["PUT"],
-            response_model=ServiceTypeRead,
-            tags=self.tags,
-            dependencies=[Depends(dep) for dep in update_deps] if update_deps else [],
-        )
-
-        self.router.add_api_route(
-            path="/delete/{id}",
-            endpoint=self._delete_service_type(),
-            methods=["DELETE"],
-            response_model=dict,
-            tags=self.tags,
-            dependencies=[Depends(dep) for dep in delete_deps] if delete_deps else [],
-        )
-
-    def _create_service_type(self):
-        """Custom create endpoint"""
-
-        async def create_service_type(
-            data: ServiceTypeCreate, db: AsyncSession = Depends(get_async_db)
-        ):
-            service_type = ServiceType(**data.model_dump())
-            db.add(service_type)
-            await db.commit()
-            await db.refresh(service_type)
-            return service_type
-
-        return create_service_type
-
-
-service_type_router = crud_router(
-    session=get_async_db,
-    model=ServiceType,
-    create_schema=ServiceTypeCreate,
-    update_schema=ServiceTypeUpdate,
-    select_schema=ServiceTypeRead,
-    path="/types",
-    endpoint_creator=ServiceTypeEndpointCreator,
-    tags=["ServiceTypes"],
-    crud=service_type_crud,
-    create_deps=[verify_admin_key],
-    update_deps=[verify_admin_key],
-    delete_deps=[verify_admin_key],
-    read_deps=[verify_admin_key],
-    read_multi_deps=[verify_admin_key],
+@service_type_router.get(
+    "/list",
+    response_model=list[ServiceTypeRead],
+    dependencies=[Depends(verify_admin_key)],
 )
+async def list_service_types(db: AsyncSession = Depends(get_async_db)):
+    query = select(ServiceType)
+    result = await db.execute(query)
+    return result.scalars().all()
+
+
+@service_type_router.get(
+    "/get/{id}",
+    response_model=ServiceTypeRead,
+    dependencies=[Depends(verify_admin_key)],
+)
+async def get_service_type(id: int, db: AsyncSession = Depends(get_async_db)):
+    query = select(ServiceType).where(ServiceType.id == id)
+    result = await db.execute(query)
+    service_type = result.scalar_one_or_none()
+    if not service_type:
+        raise HTTPException(status_code=404, detail="Service type not found")
+    return service_type
+
+
+@service_type_router.post(
+    "/create", response_model=ServiceTypeRead, dependencies=[Depends(verify_admin_key)]
+)
+async def create_service_type(
+    data: ServiceTypeCreate, db: AsyncSession = Depends(get_async_db)
+):
+    service_type = ServiceType(**data.model_dump())
+    db.add(service_type)
+    await db.commit()
+    await db.refresh(service_type)
+    return service_type
+
+
+@service_type_router.put(
+    "/update/{id}",
+    response_model=ServiceTypeRead,
+    dependencies=[Depends(verify_admin_key)],
+)
+async def update_service_type(
+    id: int, data: ServiceTypeUpdate, db: AsyncSession = Depends(get_async_db)
+):
+    query = select(ServiceType).where(ServiceType.id == id)
+    result = await db.execute(query)
+    service_type = result.scalar_one_or_none()
+    if not service_type:
+        raise HTTPException(status_code=404, detail="Service type not found")
+
+    update_data = data.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(service_type, key, value)
+
+    await db.commit()
+    await db.refresh(service_type)
+    return service_type
+
+
+@service_type_router.delete("/delete/{id}", dependencies=[Depends(verify_admin_key)])
+async def delete_service_type(id: int, db: AsyncSession = Depends(get_async_db)):
+    query = select(ServiceType).where(ServiceType.id == id)
+    result = await db.execute(query)
+    service_type = result.scalar_one_or_none()
+    if not service_type:
+        raise HTTPException(status_code=404, detail="Service type not found")
+
+    await db.delete(service_type)
+    await db.commit()
+    return {"message": "Service type deleted"}
+
 
 service_router.include_router(service_type_router)
 
