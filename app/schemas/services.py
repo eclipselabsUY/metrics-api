@@ -48,4 +48,5 @@ class ServiceTypeUpdate(BaseModel):
 class ServiceTypeRead(BaseModel):
     id: int
     name: str
+    kind: ServiceKind
     services: List[ServiceRead] = []
