@@ -30,9 +30,9 @@ async def new_view(request: Request, view: ViewEventIn):
         "viewport": view.viewport or "",
         "document_title": view.document_title or "",
         "client_ip": request.client.host if request.client else "",
-        "timestamp": view.timestamp.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        if view.timestamp
-        else None,
+        "timestamp": (view.timestamp or datetime.utcnow()).strftime(
+            "%Y-%m-%d %H:%M:%S.%f"
+        )[:-3],
     }
 
     client = await get_clickhouse_client()
