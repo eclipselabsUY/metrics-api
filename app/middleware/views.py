@@ -16,10 +16,37 @@ EXCLUDED_PATHS = {
     "/redoc",
     "/openapi.json",
     "/health",
+    "/status",
+    "/fingcraft-stats",
     "/metrics",
     "/event",
     "/events",
     "/events/count",
+    "/events/timeline",
+    "/views",
+    "/views/count",
+    "/views/stats",
+    "/views/timeline",
+    "/services",
+    "/services/get",
+    "/services/create",
+    "/services/update",
+    "/services/delete",
+    "/services/types",
+    "/services/types/get",
+    "/services/types/create",
+    "/services/types/update",
+    "/services/types/delete",
+    "/event-types",
+    "/event-types/get",
+    "/event-types/create",
+    "/event-types/update",
+    "/event-types/delete",
+    "/rate-limits",
+    "/rate-limits/get",
+    "/rate-limits/create",
+    "/rate-limits/update",
+    "/rate-limits/delete",
 }
 
 EXCLUDED_EXTENSIONS = {
@@ -74,6 +101,9 @@ async def view_tracking_middleware(request: Request, call_next):
             service = getattr(request.state, "service", None)
             if service:
                 service_id = service.id
+
+            if service_id == 0:
+                return response
 
             view_data = {
                 "service_id": service_id,
