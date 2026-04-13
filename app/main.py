@@ -40,7 +40,7 @@ app = FastAPI(lifespan=lifespan, docs_url=docs_url, redoc_url=redoc_url)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:3000", "http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
