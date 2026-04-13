@@ -114,6 +114,11 @@ service_router = crud_router(
 
 service_type_crud = FastCRUD(ServiceType)
 
+
+class ServiceTypeEndpointCreator(EndpointCreator):
+    pass
+
+
 service_type_router = crud_router(
     session=get_async_db,
     model=ServiceType,
@@ -121,13 +126,7 @@ service_type_router = crud_router(
     update_schema=ServiceTypeUpdate,
     select_schema=ServiceTypeRead,
     path="/types",
-    endpoint_names={
-        "read": "get",
-        "read_multi": "get",
-        "update": "update",
-        "delete": "delete",
-        "create": "create",
-    },
+    endpoint_creator=ServiceTypeEndpointCreator,
     tags=["ServiceTypes"],
     crud=service_type_crud,
     create_deps=[verify_admin_key],
