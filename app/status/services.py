@@ -1,6 +1,7 @@
 from httpx import AsyncClient, RequestError
 import asyncio
 
+
 async def check_http(service):
     async with AsyncClient() as client:
         try:
@@ -10,6 +11,7 @@ async def check_http(service):
         except RequestError:
             return "Degraded"
 
+
 async def check_tcp(service):
     try:
         reader, writer = await asyncio.open_connection(service["host"], service["port"])
@@ -18,4 +20,3 @@ async def check_tcp(service):
         return "Healthy"
     except Exception:
         return "Degraded"
-

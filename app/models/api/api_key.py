@@ -20,10 +20,6 @@ class ApiKey(Base):
         index=True,
     )
 
-    service = relationship(
-        "Service",
-        back_populates="api_keys",
-        lazy="joined"
-    )
+    service = relationship("Service", back_populates="api_keys", lazy="joined")
 
     is_active = Column(Boolean, default=True, nullable=False)
